@@ -2,13 +2,15 @@ import { View, StyleSheet } from "react-native";
 import LittleLemonHeader from "./components/LittleLemonHeader";
 import LittleLemonFooter from "./components/LittleLemonFooter";
 import WelcomeScreen from "./components/WelcomeScreen";
+import Menu from "./components/Menu";
 
 export default function App() {
   return (
     <>
       <View style={styles.container}>
         <LittleLemonHeader />
-        <WelcomeScreen />
+        {/* <WelcomeScreen /> */}
+        <Menu />
       </View>
       <View style={styles.footer}>
         <LittleLemonFooter />
