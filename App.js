@@ -3,6 +3,7 @@ import LittleLemonHeader from "./components/LittleLemonHeader";
 import LittleLemonFooter from "./components/LittleLemonFooter";
 import WelcomeScreen from "./components/WelcomeScreen";
 import Menu from "./components/Menu";
+import LoginScreen from "./components/LoginScreen";
 
 export default function App() {
   return (
@@ -10,7 +11,8 @@ export default function App() {
       <View style={styles.container}>
         <LittleLemonHeader />
         {/* <WelcomeScreen /> */}
-        <Menu />
+        {/* <Menu /> */}
+        <LoginScreen />
       </View>
       <View style={styles.footer}>
         <LittleLemonFooter />
