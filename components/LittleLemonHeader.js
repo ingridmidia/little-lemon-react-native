@@ -3,20 +3,21 @@ import { View, Text, StyleSheet, Image } from "react-native";
 export default function LittleLemonHeader() {
   return (
     <View style={headerStyles.container}>
-      <Image style={headerStyles.logo} source={require("../img/littleLemonLogo.png")} />
-      <Text style={headerStyles.headerText}>
-        Your Local Mediterranean Bistro
-      </Text>
+      <Image
+        style={headerStyles.logo}
+        source={require("../img/littleLemonLogo.png")}
+        accessible={true}
+        accessibilityLabel={"Little Lemon Logo"}
+      />
     </View>
   );
 }
 
 const headerStyles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#FFFFF0",
     alignItems: "center",
     justifyContent: "center",
-    
   },
   headerText: {
     padding: 10,
@@ -28,6 +29,6 @@ const headerStyles = StyleSheet.create({
     height: 100,
     width: 300,
     resizeMode: "contain",
-    marginTop: 20
+    marginTop: 20,
   },
 });

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text, SectionList, StyleSheet } from "react-native";
+import { View, Text, SectionList, StyleSheet, Pressable } from "react-native";
 
 const menuItemsToDisplay = [
   {
@@ -58,7 +58,7 @@ const Header = () => (
   </Text>
 );
 
-export default function Menu() {
+export default function Menu({navigation}) {
   const renderItem = ({ item }) => <Item name={item.name} price={item.price} />;
 
   const renderSectionHeader = ({ section: { title } }) => (
@@ -74,8 +74,14 @@ export default function Menu() {
         sections={menuItemsToDisplay}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        ListHeaderComponent={Header}
+        // ListHeaderComponent={Header}
       ></SectionList>
+      <Pressable
+        style={menuStyles.button}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={menuStyles.buttonText}>Go Back</Text>
+      </Pressable>
     </View>
   );
 }
@@ -97,16 +103,29 @@ const menuStyles = StyleSheet.create({
     textAlign: "center",
   },
   itemText: {
-    color: "#F4CE14",
+    color: "#0e3e30",
     fontSize: 20,
   },
   headerStyle: {
-    backgroundColor: "#F4CE14",
+    backgroundColor: "#FFF88A",
   },
   sectionHeader: {
-    color: "black",
+    color: "#0e3e30",
     fontSize: 26,
     flexWrap: "wrap",
     textAlign: "center",
+  },
+  button: {
+    fontSize: 22,
+    padding: 8,
+    marginVertical: 8,
+    margin: 80,
+    backgroundColor: "#6a8f5f",
+    borderRadius: 30,
+  },
+  buttonText: {
+    color: "#0e3e30",
+    textAlign: "center",
+    fontSize: 15,
   },
 });
