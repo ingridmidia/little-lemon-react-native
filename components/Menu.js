@@ -76,12 +76,12 @@ export default function Menu({navigation}) {
         renderSectionHeader={renderSectionHeader}
         // ListHeaderComponent={Header}
       ></SectionList>
-      <Pressable
+      {/* <Pressable
         style={menuStyles.button}
         onPress={() => navigation.goBack()}
       >
         <Text style={menuStyles.buttonText}>Go Back</Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 }
@@ -89,6 +89,7 @@ export default function Menu({navigation}) {
 const menuStyles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFFFF0",
   },
   innerContainer: {
     paddingHorizontal: 40,

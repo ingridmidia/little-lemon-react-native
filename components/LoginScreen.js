@@ -24,7 +24,7 @@ export default function LoginScreen() {
         {loggedIn && <Text style={styles.headerText}>You are logged in!</Text>}
         {!loggedIn && (
           <>
-            <Text style={styles.regularText}>Login to continue </Text>
+            <Text style={styles.regularText}>Login to Continue </Text>
             <TextInput
               value={email}
               onChangeText={onChangeEmail}
@@ -57,42 +57,41 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFFFF0",
   },
   headerText: {
     padding: 40,
     fontSize: 30,
-    color: "#EDEFEE",
+    color: "#0e3e30",
     textAlign: "center",
   },
   regularText: {
     fontSize: 24,
     padding: 20,
     marginVertical: 8,
-    color: "#EDEFEE",
+    color: "#0e3e30",
     textAlign: "center",
   },
   input: {
     height: 40,
     margin: 12,
     borderWidth: 1,
+    borderRadius: 10,
     padding: 10,
     fontSize: 16,
-    borderColor: "EDEFEE",
     backgroundColor: "white",
   },
   button: {
     fontSize: 22,
-    padding: 10,
+    padding: 8,
     marginVertical: 8,
     margin: 40,
-    backgroundColor: "#EDEFEE",
-    borderColor: "#EDEFEE",
-    borderWidth: 2,
-    borderRadius: 12,
+    backgroundColor: "#6a8f5f",
+    borderRadius: 30,
   },
   buttonText: {
-    color: "#333333",
+    color: "#0e3e30",
     textAlign: "center",
-    fontSize: 32,
+    fontSize: 30,
   },
 });

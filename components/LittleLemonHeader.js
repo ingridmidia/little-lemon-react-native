@@ -18,6 +18,7 @@ const headerStyles = StyleSheet.create({
     backgroundColor: "#FFFFF0",
     alignItems: "center",
     justifyContent: "center",
+    paddingTop:25
   },
   headerText: {
     padding: 10,
