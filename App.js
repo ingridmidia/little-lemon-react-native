@@ -6,6 +6,8 @@ import LoginScreen from "./components/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
+import Settings from "./components/Settings";
+import Onboarding from "./components/Onboarding";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,8 +24,10 @@ export default function App() {
                 iconName = focused ? "home" : "home";
               } else if (route.name === "Menu") {
                 iconName = "restaurant-menu";
-              } else {
+              } else if (route.name === "Login") {
                 iconName = "login";
+              } else {
+                iconName = "settings";
               }
               return (
                 <MaterialIcons name={iconName} size={size} color={color} />
@@ -46,6 +50,16 @@ export default function App() {
           <Tab.Screen
             name="Login"
             component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={Settings}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="Onboarding"
+            component={Onboarding}
             options={{ headerShown: false }}
           />
         </Tab.Navigator>
