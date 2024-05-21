@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Text,
   ScrollView,
   StyleSheet,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,
   Pressable
 } from "react-native";
 
 export default function WelcomeScreen({navigation}) {
-  const [firstName, onChangeFirstName] = useState("");
-  const colorScheme = useColorScheme();
-
   return (
     <KeyboardAvoidingView
       style={welcomeStyle.container}
@@ -22,11 +17,6 @@ export default function WelcomeScreen({navigation}) {
       <ScrollView
         indicatorStyle={"white"}
         keyboardDismissMode="on-drag"
-        style={
-          colorScheme === "light"
-            ? { backgroundColor: "#FFFFF0" }
-            : { backgroundColor: "#333333" }
-        }
       >
         <Text style={welcomeStyle.titleText}>Welcome to Little Lemon</Text>
         <Text style={welcomeStyle.text}>
@@ -34,12 +24,6 @@ export default function WelcomeScreen({navigation}) {
           and classic cocktails in a lively but casual environment. We would
           love to hear more about your experience with us!
         </Text>
-        {/* <TextInput
-          value={firstName}
-          onChangeText={onChangeFirstName}
-          style={welcomeStyle.input}
-          placeholder="First Name"
-        /> */}
         <Pressable style={welcomeStyle.button} onPress={() => navigation.navigate("Menu")}>
           <Text style={welcomeStyle.buttonText}>View Menu</Text>
         </Pressable>
@@ -51,6 +35,7 @@ export default function WelcomeScreen({navigation}) {
 const welcomeStyle = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
   },
   titleText: {
     padding: 25,
@@ -64,15 +49,6 @@ const welcomeStyle = StyleSheet.create({
     textAlign: "center",
     padding: 20,
     marginVertical: 8,
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    fontSize: 16,
-    borderColor: "EDEFEE",
-    backgroundColor: "white",
   },
   button: {
     fontSize: 22,

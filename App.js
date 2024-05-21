@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
 import LittleLemonHeader from "./components/LittleLemonHeader";
 import WelcomeScreen from "./components/WelcomeScreen";
 import Menu from "./components/Menu";
 import LoginScreen from "./components/LoginScreen";
-import Settings from "./components/Settings";
+import EmailNotifications from "./components/EmailNotifications";
 import Onboarding from "./components/Onboarding";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
+import Profile from "./components/Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,8 +28,8 @@ function TabNavigator({ navigation }) {
               iconName = focused ? "home" : "home";
             } else if (route.name === "Menu") {
               iconName = "restaurant-menu";
-            } else if (route.name === "Login") {
-              iconName = "login";
+            } else if (route.name === "Profile") {
+              iconName = "person";
             } else {
               iconName = "settings";
             }
@@ -49,8 +50,8 @@ function TabNavigator({ navigation }) {
           options={{ headerShown: false }}
         />
         <Tab.Screen
-          name="Settings"
-          component={Settings}
+          name="Profile"
+          component={Profile}
           options={{ headerShown: false }}
         />
       </Tab.Navigator>

@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  Image
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -78,6 +79,7 @@ export default function Onboarding({ navigation }) {
       style={onboardingStyles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <Image style={onboardingStyles.logo} source={require("../img/logo.png")} />
       <ScrollView keyboardDismissMode="on-drag">
         <Text style={onboardingStyles.headerText}>Let us get to know you</Text>
         <Text style={onboardingStyles.regularText}>First Name</Text>
@@ -132,6 +134,9 @@ const onboardingStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFF0",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 25,
   },
   headerText: {
     fontSize: 30,
@@ -171,5 +176,11 @@ const onboardingStyles = StyleSheet.create({
     color: "red",
     textAlign: "center",
     fontSize: 14,
+  },
+  logo: {
+    marginTop: 45,
+    height: 100,
+    width: 100,
+    resizeMode: "contain",
   },
 });

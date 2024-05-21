@@ -1,0 +1,103 @@
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet } from "react-native";
+import { Switch } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export default function EmailNotifications() {
+  const [notifications, setNotifications] = useState({
+    orderStatuses: false,
+    passwordChanges: false,
+    specialOffers: false,
+    newsletter: false,
+  });
+
+  useEffect(() => {
+    const loadNotifications = async () => {
+      try {
+        const storedNotifications = await AsyncStorage.getItem("notifications");
+        if (storedNotifications !== null) {
+          setNotifications(JSON.parse(storedNotifications));
+        }
+      } catch (error) {
+        console.error("Error loading notifications:", error);
+      }
+    };
+
+    loadNotifications();
+  }, []);
+
+  useEffect(() => {
+    const saveNotifications = async () => {
+      try {
+        await AsyncStorage.setItem("notifications", JSON.stringify(notifications));
+      } catch (error) {
+        console.error("Error saving notifications:", error);
+      }
+    };
+
+    saveNotifications();
+  }, [notifications]);
+
+  const updateState = (key) => (value) => {
+    setNotifications((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Email Notifications</Text>
+      <View style={styles.row}>
+        <Text style={styles.text}>Order Statuses</Text>
+        <Switch
+          value={notifications.orderStatuses}
+          onValueChange={(value) => updateState("orderStatuses")(value)}
+        />
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.text}>Password Changes</Text>
+        <Switch
+          value={notifications.passwordChanges}
+          onValueChange={(value) => updateState("passwordChanges")(value)}
+        />
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.text}>Special Orders</Text>
+        <Switch
+          value={notifications.specialOffers}
+          onValueChange={(value) => updateState("specialOffers")(value)}
+        />
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.text}>Newsletter</Text>
+        <Switch
+          value={notifications.newsletter}
+          onValueChange={(value) => updateState("newsletter")(value)}
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    padding: 16,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+  },
+  header: {
+    margin: 5,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  text: {
+    fontSize: 16,
+  },
+});

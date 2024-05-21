@@ -89,7 +89,7 @@ export default function Menu({navigation}) {
 const menuStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFF0",
+    backgroundColor: "white",
   },
   innerContainer: {
     paddingHorizontal: 40,

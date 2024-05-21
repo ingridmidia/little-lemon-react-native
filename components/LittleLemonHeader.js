@@ -21,7 +21,7 @@ export default function LittleLemonHeader({ navigation }) {
           }
         }}
       >
-        <Text>Logout</Text>
+        <Text style={headerStyles.logout}>Logout</Text>
       </Pressable>
     </View>
   );
@@ -29,10 +29,12 @@ export default function LittleLemonHeader({ navigation }) {
 
 const headerStyles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFF0",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#FFFFF0",
     paddingTop: 25,
+    paddingHorizontal: 10,
   },
   headerText: {
     padding: 10,
@@ -41,9 +43,15 @@ const headerStyles = StyleSheet.create({
     textAlign: "center",
   },
   logo: {
-    height: 100,
-    width: 300,
+    height: 80,
+    width: 200,
     resizeMode: "contain",
     marginTop: 20,
+  },
+  logout: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 20,
+    color: "#0e3e30",
   },
 });
