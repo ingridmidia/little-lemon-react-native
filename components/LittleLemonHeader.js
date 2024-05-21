@@ -13,11 +13,11 @@ export default function LittleLemonHeader({ navigation }) {
       <Pressable
         onPress={() => {
           try {
-            AsyncStorage.setItem("loggedIn", JSON.stringify(false));
-            console.log("logged out");
+            AsyncStorage.removeItem("userInfo");
+            AsyncStorage.removeItem("notifications");
             navigation.navigate("Onboarding");
           } catch (error) {
-            console.error("Error saving loggedIn status:", error);
+            console.error("Error removing user info:", error);
           }
         }}
       >

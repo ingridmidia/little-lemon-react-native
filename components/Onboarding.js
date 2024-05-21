@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ScrollView,
   Text,
@@ -7,104 +7,103 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  Image
+  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import { checkFirstName, checkEmail } from "../utils/validations";
 
 export default function Onboarding({ navigation }) {
-  const [firstName, onChangeFirstName] = useState("");
-  const [isFirstNameTouched, setIsFirstNameTouched] = useState(false);
-  const [checkFirstName, setCheckFirstName] = useState(false);
-  const [email, onChangeEmail] = useState("");
-  const [isEmailTouched, setIsEmailTouched] = useState(false);
-  const [checkEmail, setCheckEmail] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+  });
+  const [checkedFirstName, setCheckedFirstName] = useState(false);
+  const [checkedEmail, setCheckedEmail] = useState(false);
+  const [touchedFirstName, setTouchedFirstName] = useState(false);
+  const [touchedEmail, setTouchedEmail] = useState(false);
 
-  const handleCheckFirstName = (firstName) => {
+  const checkFirstName = (firstName) => {
     const regex = /^[A-Za-z]+$/;
-    setCheckFirstName(firstName.trim() !== "" && regex.test(firstName));
+    setCheckedFirstName(firstName.trim() !== "" && regex.test(firstName));
   };
 
-  const handleFirstNameChange = (firstName) => {
-    onChangeFirstName(firstName);
-    setIsFirstNameTouched(true);
-    handleCheckFirstName(firstName);
-  };
-
-  const handleCheckEmail = (email) => {
+  const checkEmail = (email) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    setCheckEmail(regex.test(email));
+    setCheckedEmail(regex.test(email));
   };
 
-  const handleEmailChange = (email) => {
-    onChangeEmail(email);
-    setIsEmailTouched(true);
-    handleCheckEmail(email);
+  const handleUserInfoChange = (key) => (value) => {
+    setUserInfo((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+    if (key === "firstName") {
+      checkFirstName(value);
+    } else if (key === "email") {
+      checkEmail(value);
+    }
   };
 
-  useEffect(() => {
-    const getLoggedInStatus = async () => {
-      try {
-        const value = await AsyncStorage.getItem("loggedIn");
-        if (value === null || value === false) {
-          navigation.navigate("Onboarding");
-        }
-        if (value !== null) {
-          setLoggedIn(JSON.parse(value));
-        }
-        console.log("getting logged in as " + value);
-      } catch (error) {
-        console.error("Error fetching loggedIn status:", error);
-      }
-    };
+  const saveUserInfo = async () => {
+    try {
+      await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+    } catch (error) {
+      console.error("Error saving user info:", error);
+    }
+  };
 
-    getLoggedInStatus();
-  }, []);
-
-  useEffect(() => {
-    const saveLoggedInStatus = async () => {
-      try {
-        await AsyncStorage.setItem("loggedIn", JSON.stringify(loggedIn));
-        console.log("logged in set to " + loggedIn);
-      } catch (error) {
-        console.error("Error saving loggedIn status:", error);
-      }
-    };
-
-    saveLoggedInStatus();
-  }, [loggedIn]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setUserInfo({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+      });
+      setCheckedFirstName(false);
+      setCheckedEmail(false);
+      setTouchedFirstName(false);
+      setTouchedEmail(false);
+    }, [])
+  );
 
   return (
     <KeyboardAvoidingView
       style={onboardingStyles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Image style={onboardingStyles.logo} source={require("../img/logo.png")} />
+      <Image
+        style={onboardingStyles.logo}
+        source={require("../img/logo.png")}
+      />
       <ScrollView keyboardDismissMode="on-drag">
         <Text style={onboardingStyles.headerText}>Let us get to know you</Text>
         <Text style={onboardingStyles.regularText}>First Name</Text>
         <TextInput
-          value={firstName}
-          onChangeText={handleFirstNameChange}
+          value={userInfo.firstName}
+          onChangeText={(value) => handleUserInfoChange("firstName")(value)}
           style={onboardingStyles.input}
           placeholder="First Name"
-          onBlur={() => setIsFirstNameTouched(true)}
+          onBlur={() => setTouchedFirstName(true)}
         />
-        {isFirstNameTouched && !checkFirstName && (
+        {touchedFirstName && !checkedFirstName && (
           <Text style={onboardingStyles.errorText}>
             First name cannot be empty and should contain only letters.
           </Text>
         )}
         <Text style={onboardingStyles.regularText}>Email</Text>
         <TextInput
-          value={email}
-          onChangeText={handleEmailChange}
+          value={userInfo.email}
+          onChangeText={(value) => handleUserInfoChange("email")(value)}
           style={onboardingStyles.input}
           placeholder="Email"
           keyboardType="email-address"
-          onBlur={() => setIsEmailTouched(true)}
+          onBlur={() => setTouchedEmail(true)}
         />
-        {isEmailTouched && !checkEmail && (
+        {touchedEmail && !checkedEmail && (
           <Text style={onboardingStyles.errorText}>
             Please enter a valid email.
           </Text>
@@ -114,12 +113,12 @@ export default function Onboarding({ navigation }) {
             onboardingStyles.button,
             {
               backgroundColor:
-                checkEmail && checkFirstName ? "#6a8f5f" : "#cccccc",
+                checkedEmail && checkedFirstName ? "#6a8f5f" : "#cccccc",
             },
           ]}
-          disabled={!checkEmail || !checkFirstName}
+          disabled={!checkedEmail || !checkedFirstName}
           onPress={() => {
-            setLoggedIn(true);
+            saveUserInfo();
             navigation.navigate("Main");
           }}
         >

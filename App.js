@@ -3,8 +3,6 @@ import { View, StyleSheet } from "react-native";
 import LittleLemonHeader from "./components/LittleLemonHeader";
 import WelcomeScreen from "./components/WelcomeScreen";
 import Menu from "./components/Menu";
-import LoginScreen from "./components/LoginScreen";
-import EmailNotifications from "./components/EmailNotifications";
 import Onboarding from "./components/Onboarding";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
