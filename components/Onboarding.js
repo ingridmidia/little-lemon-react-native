@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -8,12 +8,16 @@ import {
   Platform,
   Pressable,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Onboarding() {
+export default function Onboarding({ navigation }) {
   const [firstName, onChangeFirstName] = useState("");
-  const [checkFirstName, setCheckFirstName] = useState(true);
+  const [isFirstNameTouched, setIsFirstNameTouched] = useState(false);
+  const [checkFirstName, setCheckFirstName] = useState(false);
   const [email, onChangeEmail] = useState("");
-  const [checkEmail, setCheckEmail] = useState(true);
+  const [isEmailTouched, setIsEmailTouched] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handleCheckFirstName = (firstName) => {
     const regex = /^[A-Za-z]+$/;
@@ -22,6 +26,7 @@ export default function Onboarding() {
 
   const handleFirstNameChange = (firstName) => {
     onChangeFirstName(firstName);
+    setIsFirstNameTouched(true);
     handleCheckFirstName(firstName);
   };
 
@@ -32,8 +37,41 @@ export default function Onboarding() {
 
   const handleEmailChange = (email) => {
     onChangeEmail(email);
+    setIsEmailTouched(true);
     handleCheckEmail(email);
   };
+
+  useEffect(() => {
+    const getLoggedInStatus = async () => {
+      try {
+        const value = await AsyncStorage.getItem("loggedIn");
+        if (value === null || value === false) {
+          navigation.navigate("Onboarding");
+        }
+        if (value !== null) {
+          setLoggedIn(JSON.parse(value));
+        }
+        console.log("getting logged in as " + value);
+      } catch (error) {
+        console.error("Error fetching loggedIn status:", error);
+      }
+    };
+
+    getLoggedInStatus();
+  }, []);
+
+  useEffect(() => {
+    const saveLoggedInStatus = async () => {
+      try {
+        await AsyncStorage.setItem("loggedIn", JSON.stringify(loggedIn));
+        console.log("logged in set to " + loggedIn);
+      } catch (error) {
+        console.error("Error saving loggedIn status:", error);
+      }
+    };
+
+    saveLoggedInStatus();
+  }, [loggedIn]);
 
   return (
     <KeyboardAvoidingView
@@ -48,8 +86,9 @@ export default function Onboarding() {
           onChangeText={handleFirstNameChange}
           style={onboardingStyles.input}
           placeholder="First Name"
+          onBlur={() => setIsFirstNameTouched(true)}
         />
-        {!checkFirstName && (
+        {isFirstNameTouched && !checkFirstName && (
           <Text style={onboardingStyles.errorText}>
             First name cannot be empty and should contain only letters.
           </Text>
@@ -61,8 +100,9 @@ export default function Onboarding() {
           style={onboardingStyles.input}
           placeholder="Email"
           keyboardType="email-address"
+          onBlur={() => setIsEmailTouched(true)}
         />
-        {!checkEmail && (
+        {isEmailTouched && !checkEmail && (
           <Text style={onboardingStyles.errorText}>
             Please enter a valid email.
           </Text>
@@ -76,6 +116,10 @@ export default function Onboarding() {
             },
           ]}
           disabled={!checkEmail || !checkFirstName}
+          onPress={() => {
+            setLoggedIn(true);
+            navigation.navigate("Main");
+          }}
         >
           <Text style={onboardingStyles.buttonText}>Next</Text>
         </Pressable>
