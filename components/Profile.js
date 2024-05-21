@@ -24,6 +24,11 @@ export default function Profile() {
     phone: "",
   });
 
+  const [touchedFirstName, setTouchedFirstName] = useState(false);
+  const [touchedLastName, setTouchedLastName] = useState(false);
+  const [touchedEmail, setTouchedEmail] = useState(false);
+  const [touchedPhone, setTouchedPhone] = useState(false);
+
   useEffect(() => {
     const getUserInfo = async () => {
       try {
@@ -46,38 +51,14 @@ export default function Profile() {
     }));
   };
 
-const saveUserInfo = async () => {
-  try {
-    if (!checkFirstName(userInfo.firstName)) {
-      Alert.alert(
-        "Invalid First Name",
-        "First name cannot be empty and should contain only letters."
-      );
-      return;
+  const saveUserInfo = async () => {
+    try {
+      await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+      Alert.alert("Success", "User information saved successfully.");
+    } catch (error) {
+      console.error("Error saving user info:", error);
     }
-    if (!checkLastName(userInfo.lastName)) {
-      Alert.alert(
-        "Invalid Last Name",
-        "Last name cannot be empty and should contain only letters."
-      );
-      return;
-    }
-    if (!checkEmail(userInfo.email)) {
-      Alert.alert("Invalid Email", "Please enter a valid email address.");
-      return;
-    }
-    if (!checkPhone(userInfo.phone)) {
-      Alert.alert("Invalid Phone Number", "Please enter a valid phone number.");
-      return;
-    }
-
-    await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-    Alert.alert("Success", "User information saved successfully.");
-  } catch (error) {
-    console.error("Error saving user info:", error);
-  }
-};
-
+  };
 
   return (
     <View style={profileStyles.container}>
@@ -87,29 +68,68 @@ const saveUserInfo = async () => {
         style={profileStyles.input}
         value={userInfo.firstName}
         onChangeText={(value) => handleUserInfoChange("firstName")(value)}
+        onBlur={() => setTouchedFirstName(true)}
       />
+      {touchedFirstName && !checkFirstName(userInfo.firstName) && (
+        <Text style={profileStyles.errorText}>
+          First name cannot be empty and should contain only letters.
+        </Text>
+      )}
       <Text style={profileStyles.text}> Last Name</Text>
       <TextInput
         style={profileStyles.input}
         placeholder="Last Name"
         value={userInfo.lastName}
         onChangeText={(value) => handleUserInfoChange("lastName")(value)}
+        onBlur={() => setTouchedLastName(true)}
       />
+      {touchedLastName && !checkLastName(userInfo.lastName) && (
+        <Text style={profileStyles.errorText}>
+          Last name cannot be empty and should contain only letters.
+        </Text>
+      )}
       <Text style={profileStyles.text}> Email</Text>
       <TextInput
         style={profileStyles.input}
         value={userInfo.email}
         onChangeText={(value) => handleUserInfoChange("email")(value)}
+        onBlur={() => setTouchedEmail(true)}
       />
+      {touchedEmail && !checkEmail(userInfo.email) && (
+        <Text style={profileStyles.errorText}>Please enter a valid email.</Text>
+      )}
       <Text style={profileStyles.text}> Phone Number</Text>
       <TextInput
         style={profileStyles.input}
         value={userInfo.phone}
         placeholder="Phone Number"
         onChangeText={(value) => handleUserInfoChange("phone")(value)}
+        onBlur={() => setTouchedPhone(true)}
       />
+      {touchedPhone && !checkPhone(userInfo.phone) && (
+        <Text style={profileStyles.errorText}>
+          Please enter a valid phone number.
+        </Text>
+      )}
       <Pressable
-        style={profileStyles.button}
+        style={[
+          profileStyles.button,
+          {
+            backgroundColor:
+              checkFirstName(userInfo.firstName) &&
+              checkLastName(userInfo.lastName) &&
+              checkEmail(userInfo.email) &&
+              checkPhone(userInfo.phone)
+                ? "#6a8f5f"
+                : "#cccccc",
+          },
+        ]}
+        disabled={
+          !checkFirstName(userInfo.firstName) ||
+          !checkLastName(userInfo.lastName) ||
+          !checkEmail(userInfo.email) ||
+          !checkPhone(userInfo.phone)
+        }
         onPress={() => {
           saveUserInfo();
         }}
@@ -158,12 +178,17 @@ const profileStyles = StyleSheet.create({
     marginVertical: 10,
     margin: 100,
     borderRadius: 30,
-    backgroundColor: "#6a8f5f",
   },
   buttonText: {
     color: "white",
     textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    fontSize: 14,
+    marginHorizontal: 12,
   },
 });

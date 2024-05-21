@@ -20,31 +20,15 @@ export default function Onboarding({ navigation }) {
     email: "",
     phone: "",
   });
-  const [checkedFirstName, setCheckedFirstName] = useState(false);
-  const [checkedEmail, setCheckedEmail] = useState(false);
+  
   const [touchedFirstName, setTouchedFirstName] = useState(false);
   const [touchedEmail, setTouchedEmail] = useState(false);
-
-  const checkFirstName = (firstName) => {
-    const regex = /^[A-Za-z]+$/;
-    setCheckedFirstName(firstName.trim() !== "" && regex.test(firstName));
-  };
-
-  const checkEmail = (email) => {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    setCheckedEmail(regex.test(email));
-  };
 
   const handleUserInfoChange = (key) => (value) => {
     setUserInfo((prevState) => ({
       ...prevState,
       [key]: value,
     }));
-    if (key === "firstName") {
-      checkFirstName(value);
-    } else if (key === "email") {
-      checkEmail(value);
-    }
   };
 
   const saveUserInfo = async () => {
@@ -63,8 +47,6 @@ export default function Onboarding({ navigation }) {
         email: "",
         phone: "",
       });
-      setCheckedFirstName(false);
-      setCheckedEmail(false);
       setTouchedFirstName(false);
       setTouchedEmail(false);
     }, [])
@@ -89,7 +71,7 @@ export default function Onboarding({ navigation }) {
           placeholder="First Name"
           onBlur={() => setTouchedFirstName(true)}
         />
-        {touchedFirstName && !checkedFirstName && (
+        {touchedFirstName && !checkFirstName(userInfo.firstName) && (
           <Text style={onboardingStyles.errorText}>
             First name cannot be empty and should contain only letters.
           </Text>
@@ -103,7 +85,7 @@ export default function Onboarding({ navigation }) {
           keyboardType="email-address"
           onBlur={() => setTouchedEmail(true)}
         />
-        {touchedEmail && !checkedEmail && (
+        {touchedEmail && !checkEmail(userInfo.email) && (
           <Text style={onboardingStyles.errorText}>
             Please enter a valid email.
           </Text>
@@ -113,10 +95,14 @@ export default function Onboarding({ navigation }) {
             onboardingStyles.button,
             {
               backgroundColor:
-                checkedEmail && checkedFirstName ? "#6a8f5f" : "#cccccc",
+                 checkFirstName(userInfo.firstName) && checkEmail(userInfo.email)
+                  ? "#6a8f5f"
+                  : "#cccccc",
             },
           ]}
-          disabled={!checkedEmail || !checkedFirstName}
+          disabled={
+           !checkFirstName(userInfo.firstName) || !checkEmail(userInfo.email)
+          }
           onPress={() => {
             saveUserInfo();
             navigation.navigate("Main");
