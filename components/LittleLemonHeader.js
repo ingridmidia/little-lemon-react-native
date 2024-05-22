@@ -33,7 +33,7 @@ const headerStyles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#FFFFF0",
-    paddingTop: 25,
+    paddingTop: 15,
     paddingHorizontal: 10,
   },
   headerText: {
@@ -43,7 +43,7 @@ const headerStyles = StyleSheet.create({
     textAlign: "center",
   },
   logo: {
-    height: 80,
+    height: 70,
     width: 200,
     resizeMode: "contain",
     marginTop: 20,

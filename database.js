@@ -32,7 +32,7 @@ export function saveMenuItems(menuItems) {
   db.transaction((tx) => {
     menuItems.forEach(({ name, price, category, description, image }) => {
       tx.executeSql(
-        `INSERT INTO menuitems (name, price, category, description, image) VALUES (?, ?, ?, ?)`,
+        `INSERT INTO menuitems (name, price, category, description, image) VALUES (?, ?, ?, ?, ?)`,
         [name, price, category, description, image],
         (_, { rowsAffected }) => {
           console.log(`${rowsAffected} row inserted.`);

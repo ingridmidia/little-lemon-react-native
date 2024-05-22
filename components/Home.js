@@ -27,13 +27,15 @@ const sections = ["Starters", "Mains", "Desserts", "Drinks"];
 
 const Item = ({ name, price, description, imageFileName }) => (
   <View style={homeStyles.item}>
-    <Text style={homeStyles.dishName}>{name}</Text>
-    <Text style={homeStyles.dishDescription}>{description}</Text>
-    <Text style={homeStyles.dishPrice}>${price}</Text>
+    <View style={homeStyles.itemDetails}>
+      <Text style={homeStyles.dishName}>{name}</Text>
+      <Text style={homeStyles.dishDescription}>{description}</Text>
+      <Text style={homeStyles.dishPrice}>${price}</Text>
+    </View>
     <Image
       style={homeStyles.dishImage}
       source={{
-        uri: "https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${imageFileName}?raw=true",
+        uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${imageFileName}?raw=true`,
       }}
     />
   </View>
@@ -175,6 +177,7 @@ const homeStyles = StyleSheet.create({
   },
   flatList: {
     paddingHorizontal: 10,
+    backgroundColor: "white"
   },
   searchBar: {
     marginBottom: 10,
@@ -183,15 +186,15 @@ const homeStyles = StyleSheet.create({
     shadowOpacity: 0,
   },
   item: {
+    flexDirection: "row",
+    justifyContent: "space-around",
     alignItems: "start",
     padding: 8,
     color: "black",
+    flex: 1,
   },
-  header: {
-    fontSize: 24,
-    paddingVertical: 8,
-    color: "#FBDABB",
-    backgroundColor: "#495E57",
+  itemDetails: {
+    flex: 1,
   },
   dishName: {
     fontSize: 20,
@@ -208,6 +211,11 @@ const homeStyles = StyleSheet.create({
     fontSize: 18,
     color: "black",
     paddingBottom: 4,
+  },
+  dishImage: {
+    height: 100,
+    width: 100,
+    resizeMode: "contain",
   },
   hero: {
     flexDirection: "row",
@@ -241,11 +249,5 @@ const homeStyles = StyleSheet.create({
   },
   heroContainer: {
     backgroundColor: "#495E57",
-  },
-  dishImage: {
-    height: 130,
-    width: 130,
-    resizeMode: "contain",
-    borderRadius: 20,
   },
 });
