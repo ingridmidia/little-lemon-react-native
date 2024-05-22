@@ -17,13 +17,13 @@ import {
   saveMenuItems,
   filterByQueryAndCategories,
 } from "../database";
-// import Filters from "./components/Filters";
+import Categories from "./Categories";
 // import { getSectionListData, useUpdateEffect } from "./utils";
 
 const API_URL =
   "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json";
 
-const sections = ["Starters", "Mains", "Desserts", "Drinks"];
+const sections = ["Starters", "Mains", "Desserts", "Drinks", "Specials"];
 
 const Item = ({ name, price, description, imageFileName }) => (
   <View style={homeStyles.item}>
@@ -40,6 +40,8 @@ const Item = ({ name, price, description, imageFileName }) => (
     />
   </View>
 );
+
+const Separator = () => <View style={homeStyles.separator} />;
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -148,11 +150,12 @@ export default function Home() {
         />
       </View>
 
-      {/* <Filters
+      <Categories
         selections={filterSelections}
         onChange={handleFiltersChange}
         sections={sections}
-      /> */}
+      />
+
       <FlatList
         style={homeStyles.flatList}
         data={data}
@@ -165,6 +168,7 @@ export default function Home() {
             imageFileName={item.image}
           />
         )}
+        ItemSeparatorComponent={Separator}
       />
     </SafeAreaView>
   );
@@ -177,7 +181,7 @@ const homeStyles = StyleSheet.create({
   },
   flatList: {
     paddingHorizontal: 10,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   searchBar: {
     marginBottom: 10,
@@ -238,7 +242,7 @@ const homeStyles = StyleSheet.create({
     padding: 10,
   },
   mainTitleText: {
-    color: "yellow",
+    color: "#FAFA33",
     fontWeight: "bold",
     fontSize: 36,
   },
@@ -249,5 +253,10 @@ const homeStyles = StyleSheet.create({
   },
   heroContainer: {
     backgroundColor: "#495E57",
+  },
+  separator: {
+    height: 1,
+    width: "100%",
+    backgroundColor: "#CED0CE",
   },
 });
