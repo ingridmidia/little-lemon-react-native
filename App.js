@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
 import Profile from "./components/Profile";
+import Home from "./components/Home";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,7 +40,7 @@ function TabNavigator({ navigation }) {
       >
         <Tab.Screen
           name="Home"
-          component={WelcomeScreen}
+          component={Home}
           options={{ headerShown: false }}
         />
         <Tab.Screen
