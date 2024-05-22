@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Pressable,
-  Alert,
-} from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
 import EmailNotifications from "./EmailNotifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -14,7 +7,9 @@ import {
   checkLastName,
   checkEmail,
   checkPhone,
+  formatPhone
 } from "../utils/validations";
+import { Snackbar } from "react-native-paper";
 
 export default function Profile() {
   const [userInfo, setUserInfo] = useState({
@@ -28,6 +23,16 @@ export default function Profile() {
   const [touchedLastName, setTouchedLastName] = useState(false);
   const [touchedEmail, setTouchedEmail] = useState(false);
   const [touchedPhone, setTouchedPhone] = useState(false);
+
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [highlight, setHighlight] = useState(false);
+  const [isSaved, setIsSaved] = useState(true);
+
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const phoneRef = useRef(null);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -44,7 +49,20 @@ export default function Profile() {
     getUserInfo();
   }, []);
 
+  useEffect(() => {
+    if (unsavedChanges) {
+      setIsSaved(false);
+    }
+  }, [unsavedChanges]);
+
   const handleUserInfoChange = (key) => (value) => {
+    setUnsavedChanges(true);
+    setIsSaved(false);
+
+    if (key === "phone") {
+      value = formatPhone(value);
+    }
+
     setUserInfo((prevState) => ({
       ...prevState,
       [key]: value,
@@ -54,7 +72,15 @@ export default function Profile() {
   const saveUserInfo = async () => {
     try {
       await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-      Alert.alert("Success", "User information saved successfully.");
+      setSnackbarVisible(true);
+      setHighlight(true);
+      setUnsavedChanges(false);
+      setIsSaved(true);
+      if (firstNameRef.current) firstNameRef.current.blur();
+      if (lastNameRef.current) lastNameRef.current.blur();
+      if (emailRef.current) emailRef.current.blur();
+      if (phoneRef.current) phoneRef.current.blur();
+      setTimeout(() => setHighlight(false), 2000);
     } catch (error) {
       console.error("Error saving user info:", error);
     }
@@ -65,7 +91,8 @@ export default function Profile() {
       <Text style={profileStyles.header}> Profile</Text>
       <Text style={profileStyles.text}> First Name</Text>
       <TextInput
-        style={profileStyles.input}
+        ref={firstNameRef}
+        style={[profileStyles.input, highlight && profileStyles.highlight]}
         value={userInfo.firstName}
         onChangeText={(value) => handleUserInfoChange("firstName")(value)}
         onBlur={() => setTouchedFirstName(true)}
@@ -77,7 +104,8 @@ export default function Profile() {
       )}
       <Text style={profileStyles.text}> Last Name</Text>
       <TextInput
-        style={profileStyles.input}
+        ref={lastNameRef}
+        style={[profileStyles.input, highlight && profileStyles.highlight]}
         placeholder="Last Name"
         value={userInfo.lastName}
         onChangeText={(value) => handleUserInfoChange("lastName")(value)}
@@ -90,7 +118,8 @@ export default function Profile() {
       )}
       <Text style={profileStyles.text}> Email</Text>
       <TextInput
-        style={profileStyles.input}
+        ref={emailRef}
+        style={[profileStyles.input, highlight && profileStyles.highlight]}
         value={userInfo.email}
         onChangeText={(value) => handleUserInfoChange("email")(value)}
         onBlur={() => setTouchedEmail(true)}
@@ -100,7 +129,8 @@ export default function Profile() {
       )}
       <Text style={profileStyles.text}> Phone Number</Text>
       <TextInput
-        style={profileStyles.input}
+        ref={phoneRef}
+        style={[profileStyles.input, highlight && profileStyles.highlight]}
         value={userInfo.phone}
         placeholder="Phone Number"
         onChangeText={(value) => handleUserInfoChange("phone")(value)}
@@ -119,7 +149,8 @@ export default function Profile() {
               checkFirstName(userInfo.firstName) &&
               checkLastName(userInfo.lastName) &&
               checkEmail(userInfo.email) &&
-              checkPhone(userInfo.phone)
+              checkPhone(userInfo.phone) &&
+              !isSaved
                 ? "#6a8f5f"
                 : "#cccccc",
           },
@@ -128,15 +159,21 @@ export default function Profile() {
           !checkFirstName(userInfo.firstName) ||
           !checkLastName(userInfo.lastName) ||
           !checkEmail(userInfo.email) ||
-          !checkPhone(userInfo.phone)
+          !checkPhone(userInfo.phone) ||
+          isSaved
         }
-        onPress={() => {
-          saveUserInfo();
-        }}
+        onPress={saveUserInfo}
       >
         <Text style={profileStyles.buttonText}>Save Changes</Text>
       </Pressable>
       <EmailNotifications />
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={2000}
+      >
+        User information saved successfully.
+      </Snackbar>
     </View>
   );
 }
@@ -156,6 +193,10 @@ const profileStyles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     backgroundColor: "white",
+  },
+  highlight: {
+    borderColor: "#6a8f5f",
+    borderWidth: 2,
   },
   row: {
     flexDirection: "row",
