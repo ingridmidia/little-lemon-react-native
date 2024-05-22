@@ -198,11 +198,6 @@ const profileStyles = StyleSheet.create({
     borderColor: "#6a8f5f",
     borderWidth: 2,
   },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 16,
-  },
   header: {
     margin: 10,
     fontSize: 18,

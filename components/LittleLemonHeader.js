@@ -36,12 +36,6 @@ const headerStyles = StyleSheet.create({
     paddingTop: 15,
     paddingHorizontal: 10,
   },
-  headerText: {
-    padding: 10,
-    fontSize: 18,
-    color: "black",
-    textAlign: "center",
-  },
   logo: {
     height: 70,
     width: 200,
