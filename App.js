@@ -1,13 +1,11 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import LittleLemonHeader from "./components/LittleLemonHeader";
-import WelcomeScreen from "./components/WelcomeScreen";
-import Menu from "./components/Menu";
-import Onboarding from "./components/Onboarding";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
+import LittleLemonHeader from "./components/LittleLemonHeader";
+import Onboarding from "./components/Onboarding";
 import Profile from "./components/Profile";
 import Home from "./components/Home";
 
@@ -25,12 +23,8 @@ function TabNavigator({ navigation }) {
             let iconName;
             if (route.name === "Home") {
               iconName = focused ? "home" : "home";
-            } else if (route.name === "Menu") {
-              iconName = "restaurant-menu";
-            } else if (route.name === "Profile") {
-              iconName = "person";
             } else {
-              iconName = "settings";
+              iconName = "person";
             }
             return <MaterialIcons name={iconName} size={size} color={color} />;
           },
@@ -41,11 +35,6 @@ function TabNavigator({ navigation }) {
         <Tab.Screen
           name="Home"
           component={Home}
-          options={{ headerShown: false }}
-        />
-        <Tab.Screen
-          name="Menu"
-          component={Menu}
           options={{ headerShown: false }}
         />
         <Tab.Screen

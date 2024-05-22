@@ -32,7 +32,7 @@ const headerStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#FFFFF0",
+    backgroundColor: "white",
     paddingTop: 15,
     paddingHorizontal: 10,
   },

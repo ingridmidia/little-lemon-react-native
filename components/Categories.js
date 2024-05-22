@@ -15,12 +15,12 @@ export default function Categories({ onChange, selections, sections }) {
           <TouchableOpacity
             key={index}
             onPress={() => {
-              onChange(index);
+              onChange(section);
             }}
             style={[
               categoriesStyles.button,
               {
-                backgroundColor: selections[index] ? "#FAFA33" : "white",
+                backgroundColor: selections.indexOf(section) !== -1 ? "#FAFA33" : "white",
               },
             ]}
           >

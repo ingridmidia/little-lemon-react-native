@@ -20,9 +20,8 @@ export async function getMenuItems() {
   return new Promise((resolve) => {
     db.transaction((tx) => {
       tx.executeSql("select * from menuitems", [], (_, { rows }) => {
-         const menuItems = rows._array;
-         resolve(menuItems);
-         console.log("Save in db: " + JSON.stringify(menuItems));
+        const menuItems = rows._array;
+        resolve(menuItems);
       });
     });
   });
@@ -39,6 +38,33 @@ export function saveMenuItems(menuItems) {
         },
         (_, error) => {
           console.error("Error inserting menu item:", error);
+        }
+      );
+    });
+  });
+}
+
+export async function filterByQueryAndCategories(query, activeCategories) {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      let sqlQuery = "SELECT * FROM menuitems WHERE name LIKE ?";
+
+      const categories = activeCategories.map((cat) => `${cat.toLowerCase()}`);
+
+      if (activeCategories.length > 0) {
+        sqlQuery += ` AND category IN (${activeCategories
+          .map(() => "?")
+          .join(", ")})`;
+      }
+
+      tx.executeSql(
+        sqlQuery,
+        [`%${query}%`, ...categories],
+        (_, { rows }) => {
+          resolve(rows._array);
+        },
+        (_, error) => {
+          reject(error);
         }
       );
     });

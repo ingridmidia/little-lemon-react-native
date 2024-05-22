@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -10,7 +10,6 @@ import {
   Image,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
-import debounce from "lodash.debounce";
 import {
   createTable,
   getMenuItems,
@@ -18,7 +17,6 @@ import {
   filterByQueryAndCategories,
 } from "../database";
 import Categories from "./Categories";
-// import { getSectionListData, useUpdateEffect } from "./utils";
 
 const API_URL =
   "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json";
@@ -46,10 +44,8 @@ const Separator = () => <View style={homeStyles.separator} />;
 export default function Home() {
   const [data, setData] = useState([]);
   const [searchBarText, setSearchBarText] = useState("");
-  const [query, setQuery] = useState("");
-  const [filterSelections, setFilterSelections] = useState(
-    sections.map(() => false)
-  );
+
+  const [filterSections, setFilterSections] = useState([]);
 
   const fetchData = async () => {
     try {
@@ -76,50 +72,34 @@ export default function Home() {
 
         setData(menuItems);
       } catch (e) {
-        // Handle error
         Alert.alert(e.message);
       }
     })();
   }, []);
 
-  // useUpdateEffect(() => {
-  //   (async () => {
-  //     const activeCategories = sections.filter((s, i) => {
-  //       // If all filters are deselected, all categories are active
-  //       if (filterSelections.every((item) => item === false)) {
-  //         return true;
-  //       }
-  //       return filterSelections[i];
-  //     });
-  //     try {
-  //       const menuItems = await filterByQueryAndCategories(
-  //         query,
-  //         activeCategories
-  //       );
-  //       const sectionListData = getSectionListData(menuItems);
-  //       setData(sectionListData);
-  //     } catch (e) {
-  //       Alert.alert(e.message);
-  //     }
-  //   })();
-  // }, [filterSelections, query]);
-
-  const lookup = useCallback((q) => {
-    setQuery(q);
-  }, []);
-
-  const debouncedLookup = useMemo(() => debounce(lookup, 500), [lookup]);
-
   const handleSearchChange = (text) => {
     setSearchBarText(text);
-    debouncedLookup(text);
   };
 
-  const handleFiltersChange = async (index) => {
-    const arrayCopy = [...filterSelections];
-    arrayCopy[index] = !filterSelections[index];
-    setFilterSelections(arrayCopy);
+  const handleFiltersChange = async (section) => {
+    const filterSectionsCopy = [...filterSections];
+    const index = filterSectionsCopy.indexOf(section);
+    if (index !== -1) {
+      filterSectionsCopy.splice(index, 1);
+    } else {
+      filterSectionsCopy.push(section);
+    }
+
+    setFilterSections(filterSectionsCopy);
   };
+
+  useEffect(() => {
+    filterByQueryAndCategories(searchBarText, filterSections).then(
+      (filteredData) => {
+        setData(filteredData);
+      }
+    );
+  }, [searchBarText, filterSections]);
 
   return (
     <SafeAreaView style={homeStyles.container}>
@@ -151,7 +131,7 @@ export default function Home() {
       </View>
 
       <Categories
-        selections={filterSelections}
+        selections={filterSections}
         onChange={handleFiltersChange}
         sections={sections}
       />
