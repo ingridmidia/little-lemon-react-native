@@ -8,10 +8,12 @@ import {
   Platform,
   Pressable,
   Image,
+  View,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { checkFirstName, checkEmail } from "../utils/validations";
+import Hero from "./Hero";
 
 export default function Onboarding({ navigation }) {
   const [userInfo, setUserInfo] = useState({
@@ -20,7 +22,7 @@ export default function Onboarding({ navigation }) {
     email: "",
     phone: "",
   });
-  
+
   const [touchedFirstName, setTouchedFirstName] = useState(false);
   const [touchedEmail, setTouchedEmail] = useState(false);
 
@@ -53,109 +55,121 @@ export default function Onboarding({ navigation }) {
   );
 
   return (
-    <KeyboardAvoidingView
-      style={onboardingStyles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <Image
-        style={onboardingStyles.logo}
-        source={require("../img/logo.png")}
-      />
-      <ScrollView keyboardDismissMode="on-drag">
-        <Text style={onboardingStyles.headerText}>Let us get to know you</Text>
-        <Text style={onboardingStyles.regularText}>First Name</Text>
-        <TextInput
-          value={userInfo.firstName}
-          onChangeText={(value) => handleUserInfoChange("firstName")(value)}
-          style={onboardingStyles.input}
-          placeholder="First Name"
-          onBlur={() => setTouchedFirstName(true)}
-        />
-        {touchedFirstName && !checkFirstName(userInfo.firstName) && (
-          <Text style={onboardingStyles.errorText}>
-            First name cannot be empty and should contain only letters.
-          </Text>
-        )}
-        <Text style={onboardingStyles.regularText}>Email</Text>
-        <TextInput
-          value={userInfo.email}
-          onChangeText={(value) => handleUserInfoChange("email")(value)}
-          style={onboardingStyles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          onBlur={() => setTouchedEmail(true)}
-        />
-        {touchedEmail && !checkEmail(userInfo.email) && (
-          <Text style={onboardingStyles.errorText}>
-            Please enter a valid email.
-          </Text>
-        )}
-        <Pressable
-          style={[
-            onboardingStyles.button,
-            {
-              backgroundColor:
-                 checkFirstName(userInfo.firstName) && checkEmail(userInfo.email)
-                  ? "#6a8f5f"
-                  : "#cccccc",
-            },
-          ]}
-          disabled={
-           !checkFirstName(userInfo.firstName) || !checkEmail(userInfo.email)
-          }
-          onPress={() => {
-            saveUserInfo();
-            navigation.navigate("Main");
-          }}
+    <View style={onboardingStyles.outerContainer}>
+      <ScrollView contentContainerStyle={onboardingStyles.container}>
+        <View style={onboardingStyles.imageContainer}>
+          <Image
+            style={onboardingStyles.logo}
+            source={require("../img/littleLemonLogo.png")}
+            accessible={true}
+            accessibilityLabel={"Little Lemon Logo"}
+          />
+        </View>
+
+        <Hero />
+
+        <KeyboardAvoidingView
+          style={onboardingStyles.form}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <Text style={onboardingStyles.buttonText}>Next</Text>
-        </Pressable>
+          <Text style={onboardingStyles.regularText}>Name*</Text>
+          <TextInput
+            value={userInfo.firstName}
+            onChangeText={handleUserInfoChange("firstName")}
+            style={onboardingStyles.input}
+            placeholder="Name"
+            onBlur={() => setTouchedFirstName(true)}
+          />
+          {touchedFirstName && !checkFirstName(userInfo.firstName) && (
+            <Text style={onboardingStyles.errorText}>
+              First name cannot be empty and should contain only letters.
+            </Text>
+          )}
+          <Text style={onboardingStyles.regularText}>Email*</Text>
+          <TextInput
+            value={userInfo.email}
+            onChangeText={handleUserInfoChange("email")}
+            style={onboardingStyles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            onBlur={() => setTouchedEmail(true)}
+          />
+          {touchedEmail && !checkEmail(userInfo.email) && (
+            <Text style={onboardingStyles.errorText}>
+              Please enter a valid email.
+            </Text>
+          )}
+          <Pressable
+            style={({ pressed }) => [
+              onboardingStyles.button,
+              {
+                backgroundColor:
+                  checkFirstName(userInfo.firstName) &&
+                  checkEmail(userInfo.email)
+                    ? "#6a8f5f"
+                    : "#cccccc",
+                opacity: pressed ? 0.8 : 1,
+              },
+            ]}
+            disabled={
+              !checkFirstName(userInfo.firstName) || !checkEmail(userInfo.email)
+            }
+            onPress={() => {
+              saveUserInfo();
+              navigation.navigate("Main");
+            }}
+          >
+            <Text style={onboardingStyles.buttonText}>Next</Text>
+          </Pressable>
+        </KeyboardAvoidingView>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const onboardingStyles = StyleSheet.create({
-  container: {
+  outerContainer: {
     flex: 1,
-    backgroundColor: "#FFFFF0",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 25,
+    backgroundColor: "white",
   },
-  headerText: {
-    fontSize: 30,
-    padding: 50,
-    marginVertical: 8,
-    color: "#0e3e30",
-    textAlign: "center",
+  container: {
+    justifyContent: "center",
+    backgroundColor: "white",
+  },
+  imageContainer: {
+    alignItems: "center",
+  },
+  form: {
+    backgroundColor: "white",
+    justifyContent: "center",
+    padding: 20,
   },
   regularText: {
-    fontSize: 24,
-    marginVertical: 8,
+    fontSize: 20,
+    marginVertical: 2,
     color: "#0e3e30",
-    textAlign: "center",
   },
   input: {
+    width: "100%",
     height: 40,
-    margin: 12,
+    marginVertical: 8,
     borderWidth: 1,
     borderRadius: 10,
-    padding: 10,
+    paddingHorizontal: 10,
     fontSize: 16,
     backgroundColor: "white",
   },
   button: {
-    fontSize: 20,
-    padding: 10,
-    marginVertical: 20,
-    margin: 100,
-    borderRadius: 30,
+    width: "100%",
+    paddingVertical: 12,
+    marginTop: 20,
+    borderRadius: 10,
+    alignItems: "center",
   },
   buttonText: {
-    color: "#0e3e30",
-    textAlign: "center",
-    fontSize: 30,
+    color: "#FFFFFF",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   errorText: {
     color: "red",
@@ -163,9 +177,9 @@ const onboardingStyles = StyleSheet.create({
     fontSize: 14,
   },
   logo: {
-    marginTop: 45,
-    height: 100,
-    width: 100,
+    height: 70,
+    width: 200,
     resizeMode: "contain",
+    marginTop: 45,
   },
 });

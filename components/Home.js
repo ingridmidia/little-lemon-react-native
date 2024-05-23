@@ -17,6 +17,7 @@ import {
   filterByQueryAndCategories,
 } from "../database";
 import Categories from "./Categories";
+import Hero from "./Hero";
 
 const API_URL =
   "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json";
@@ -103,39 +104,22 @@ export default function Home() {
 
   return (
     <SafeAreaView style={homeStyles.container}>
-      <View style={homeStyles.heroContainer}>
-        <View style={homeStyles.mainTitle}>
-          <Text style={homeStyles.mainTitleText}>Little Lemon</Text>
-          <Text style={homeStyles.mainTitleSubText}>Chicago</Text>
-        </View>
-        <View style={homeStyles.hero}>
-          <Text style={homeStyles.heroText}>
-            We are a family owned Mediterranean restaurant, focused on
-            traditional recipes served with a modern twist.
-          </Text>
-          <Image
-            style={homeStyles.image}
-            source={require("../img/home-image.png")}
-          />
-        </View>
-        <Searchbar
-          placeholder="Search"
-          placeholderTextColor="white"
-          onChangeText={handleSearchChange}
-          value={searchBarText}
-          style={homeStyles.searchBar}
-          iconColor="white"
-          inputStyle={{ color: "white" }}
-          elevation={0}
-        />
-      </View>
-
+      <Hero />
+      <Searchbar
+        placeholder="Search"
+        placeholderTextColor="white"
+        onChangeText={handleSearchChange}
+        value={searchBarText}
+        style={homeStyles.searchBar}
+        iconColor="white"
+        inputStyle={{ color: "white" }}
+        elevation={0}
+      />
       <Categories
         selections={filterSections}
         onChange={handleFiltersChange}
         sections={sections}
       />
-
       <FlatList
         style={homeStyles.flatList}
         data={data}
@@ -168,6 +152,7 @@ const homeStyles = StyleSheet.create({
     backgroundColor: "#495E57",
     shadowRadius: 0,
     shadowOpacity: 0,
+    borderRadius: 0,
   },
   item: {
     flexDirection: "row",
