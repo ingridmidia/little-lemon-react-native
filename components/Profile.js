@@ -7,7 +7,7 @@ import {
   checkLastName,
   checkEmail,
   checkPhone,
-  formatPhone
+  formatPhone,
 } from "../utils/validations";
 import { Snackbar } from "react-native-paper";
 
@@ -17,6 +17,7 @@ export default function Profile() {
     lastName: "",
     email: "",
     phone: "",
+    image: "",
   });
 
   const [touchedFirstName, setTouchedFirstName] = useState(false);
@@ -89,6 +90,30 @@ export default function Profile() {
   return (
     <View style={profileStyles.container}>
       <Text style={profileStyles.header}> Profile</Text>
+
+      <View style={profileStyles.imageContainer}>
+        <View style={profileStyles.imagePlaceholder}>
+          <Text style={profileStyles.imagePlaceholderText}>
+            {userInfo.firstName && Array.from(userInfo.firstName)[0]}
+            {userInfo.lastName && Array.from(userInfo.lastName)[0]}
+          </Text>
+        </View>
+        <View style={profileStyles.imageButton}>
+          <Pressable
+            style={[profileStyles.button, { backgroundColor: "#6a8f5f" }]}
+          >
+            <Text style={profileStyles.buttonText}>Change Picture</Text>
+          </Pressable>
+        </View>
+        <View>
+          <Pressable
+            style={[profileStyles.button, { backgroundColor: "#6a8f5f" }]}
+          >
+            <Text style={profileStyles.buttonText}>Remove Picture</Text>
+          </Pressable>
+        </View>
+      </View>
+
       <Text style={profileStyles.text}> First Name</Text>
       <TextInput
         ref={firstNameRef}
@@ -184,10 +209,10 @@ const profileStyles = StyleSheet.create({
     backgroundColor: "white",
   },
   input: {
-    height: 40,
+    height: 35,
     marginHorizontal: 12,
     marginTop: 5,
-    marginBottom: 10,
+    marginBottom: 7,
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
@@ -202,7 +227,7 @@ const profileStyles = StyleSheet.create({
     margin: 10,
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "start",
   },
   text: {
     fontSize: 16,
@@ -210,9 +235,9 @@ const profileStyles = StyleSheet.create({
   },
   button: {
     fontSize: 20,
-    padding: 10,
-    marginVertical: 10,
-    margin: 100,
+    padding: 8,
+    marginVertical: 8,
+    margin: 12,
     borderRadius: 30,
   },
   buttonText: {
@@ -226,5 +251,34 @@ const profileStyles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     marginHorizontal: 12,
+  },
+  imageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 10,
+    marginVertical: 4,
+    justifyContent: "space-around",
+  },
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    paddingRight: 10,
+  },
+  imagePlaceholder: {
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    backgroundColor: "#FBE362",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  imagePlaceholderText: {
+    fontSize: 32,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  imageButton: {
+    paddingLeft: 10,
   },
 });

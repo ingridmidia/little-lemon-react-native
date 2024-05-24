@@ -20,13 +20,12 @@ export default function Categories({ onChange, selections, sections }) {
             style={[
               categoriesStyles.button,
               {
-                backgroundColor: selections.indexOf(section) !== -1 ? "#FAFA33" : "white",
+                backgroundColor:
+                  selections.indexOf(section) !== -1 ? "#FBE362" : "white",
               },
             ]}
           >
-            <Text style={categoriesStyles.text}>
-              {section}
-            </Text>
+            <Text style={categoriesStyles.text}>{section}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>

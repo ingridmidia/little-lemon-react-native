@@ -29,7 +29,7 @@ const heroStyles = StyleSheet.create({
     padding: 10,
   },
   mainTitleText: {
-    color: "#FAFA33",
+    color: "#FBE362",
     fontWeight: "bold",
     fontSize: 36,
   },

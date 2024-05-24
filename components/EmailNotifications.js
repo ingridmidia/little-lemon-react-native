@@ -53,6 +53,7 @@ export default function EmailNotifications() {
         <Switch
           value={notifications.orderStatuses}
           onValueChange={(value) => updateState("orderStatuses")(value)}
+          style={styles.switch}
           color="#6a8f5f"
         />
       </View>
@@ -61,6 +62,7 @@ export default function EmailNotifications() {
         <Switch
           value={notifications.passwordChanges}
           onValueChange={(value) => updateState("passwordChanges")(value)}
+          style={styles.switch}
           color="#6a8f5f"
         />
       </View>
@@ -69,6 +71,7 @@ export default function EmailNotifications() {
         <Switch
           value={notifications.specialOffers}
           onValueChange={(value) => updateState("specialOffers")(value)}
+          style={styles.switch}
           color="#6a8f5f"
         />
       </View>
@@ -77,6 +80,7 @@ export default function EmailNotifications() {
         <Switch
           value={notifications.newsletter}
           onValueChange={(value) => updateState("newsletter")(value)}
+          style={styles.switch}
           color="#6a8f5f"
         />
       </View>
@@ -93,15 +97,18 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 10,
+    paddingVertical: 8,
   },
   header: {
-    margin: 2,
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "start",
   },
   text: {
     fontSize: 16,
+  },
+  switch: {
+    transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }],
+    color: "#6a8f5f",
   },
 });
