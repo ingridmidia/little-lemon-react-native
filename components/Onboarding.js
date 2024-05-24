@@ -163,7 +163,7 @@ const onboardingStyles = StyleSheet.create({
     width: "100%",
     paddingVertical: 12,
     marginTop: 20,
-    borderRadius: 10,
+    borderRadius: 30,
     alignItems: "center",
   },
   buttonText: {

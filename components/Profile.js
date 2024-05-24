@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import { View, Text, StyleSheet, TextInput, Pressable, Image } from "react-native";
 import EmailNotifications from "./EmailNotifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -10,6 +10,7 @@ import {
   formatPhone,
 } from "../utils/validations";
 import { Snackbar } from "react-native-paper";
+import * as ImagePicker from "expo-image-picker";
 
 export default function Profile() {
   const [userInfo, setUserInfo] = useState({
@@ -87,20 +88,49 @@ export default function Profile() {
     }
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setUserInfo((prevState) => ({
+        ...prevState,
+        ["image"]: result.assets[0].uri,
+      }));
+    }
+  };
+
+  const removeImage = () => {
+    setUserInfo((prevState) => ({
+      ...prevState,
+      ["image"]: "",
+    }));
+  };
+
   return (
     <View style={profileStyles.container}>
       <Text style={profileStyles.header}> Profile</Text>
 
       <View style={profileStyles.imageContainer}>
-        <View style={profileStyles.imagePlaceholder}>
-          <Text style={profileStyles.imagePlaceholderText}>
-            {userInfo.firstName && Array.from(userInfo.firstName)[0]}
-            {userInfo.lastName && Array.from(userInfo.lastName)[0]}
-          </Text>
-        </View>
+        {userInfo.image ? (
+          <Image source={{ uri: userInfo.image }} style={profileStyles.image} />
+        ) : (
+          <View style={profileStyles.imagePlaceholder}>
+            <Text style={profileStyles.imagePlaceholderText}>
+              {userInfo.firstName && Array.from(userInfo.firstName)[0]}
+              {userInfo.lastName && Array.from(userInfo.lastName)[0]}
+            </Text>
+          </View>
+        )}
+
         <View style={profileStyles.imageButton}>
           <Pressable
             style={[profileStyles.button, { backgroundColor: "#6a8f5f" }]}
+            onPress={pickImage}
           >
             <Text style={profileStyles.buttonText}>Change Picture</Text>
           </Pressable>
@@ -108,6 +138,7 @@ export default function Profile() {
         <View>
           <Pressable
             style={[profileStyles.button, { backgroundColor: "#6a8f5f" }]}
+            onPress={removeImage}
           >
             <Text style={profileStyles.buttonText}>Remove Picture</Text>
           </Pressable>
@@ -227,7 +258,7 @@ const profileStyles = StyleSheet.create({
     margin: 10,
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "start",
+    textAlign: "left",
   },
   text: {
     fontSize: 16,

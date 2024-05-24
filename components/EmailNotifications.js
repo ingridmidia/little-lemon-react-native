@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "start",
+    textAlign: "left",
   },
   text: {
     fontSize: 16,
